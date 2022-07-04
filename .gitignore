@@ -1,0 +1,11 @@
+/${bitwig.extension.directory}
+/target
+.DS_Store
+last-build.bin
+fileHashes.lock
+/.settings/
+/.classpath
+/.project
+/.idea
+*.iml
+/bin/
