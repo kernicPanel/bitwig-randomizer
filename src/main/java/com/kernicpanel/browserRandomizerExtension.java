@@ -27,38 +27,38 @@ public class browserRandomizerExtension extends ControllerExtension {
     AtomicReference<Integer> nextChoice = new AtomicReference<>(0);
     Random rand = new Random();
     popupBrowser
-            .resultsColumn()
-            .entryCount()
-            .addValueObserver(
-                    newValue -> {
-                      if (newValue > 0) {
-                        numberOfChoices.set(newValue);
-                      }
-                    });
+        .resultsColumn()
+        .entryCount()
+        .addValueObserver(
+            newValue -> {
+              if (newValue > 0) {
+                numberOfChoices.set(newValue);
+              }
+            });
 
     documentState
-            .getSignalSetting("Select", "browser", "Select random item")
-            .addSignalObserver(
-                    selectRandomItem(
-                            host, popupBrowser, cursorTrack, numberOfChoices, nextChoice, rand, false));
+        .getSignalSetting("Select", "browser", "Select random item")
+        .addSignalObserver(
+            selectRandomItem(
+                host, popupBrowser, cursorTrack, numberOfChoices, nextChoice, rand, false));
     documentState
-            .getSignalSetting("Add", "browser", "Add current item")
-            .addSignalObserver(popupBrowser::commit);
+        .getSignalSetting("Add", "browser", "Add current item")
+        .addSignalObserver(popupBrowser::commit);
     documentState
-            .getSignalSetting("Random", "browser", "Surprise me!")
-            .addSignalObserver(
-                    selectRandomItem(
-                            host, popupBrowser, cursorTrack, numberOfChoices, nextChoice, rand, true));
+        .getSignalSetting("Random", "browser", "Surprise me!")
+        .addSignalObserver(
+            selectRandomItem(
+                host, popupBrowser, cursorTrack, numberOfChoices, nextChoice, rand, true));
   }
 
   private NoArgsCallback selectRandomItem(
-          ControllerHost host,
-          PopupBrowser popupBrowser,
-          CursorTrack cursorTrack,
-          AtomicReference<Integer> numberOfChoices,
-          AtomicReference<Integer> nextChoice,
-          Random rand,
-          Boolean commit) {
+      ControllerHost host,
+      PopupBrowser popupBrowser,
+      CursorTrack cursorTrack,
+      AtomicReference<Integer> numberOfChoices,
+      AtomicReference<Integer> nextChoice,
+      Random rand,
+      Boolean commit) {
     return () -> {
       if (!popupBrowser.exists().getAsBoolean()) {
         cursorTrack.endOfDeviceChainInsertionPoint().browse();
@@ -68,11 +68,11 @@ public class browserRandomizerExtension extends ControllerExtension {
       // popupBrowser.selectFirstFile();
       // TODO: replace this ugly trick with a proper way to select the first item
       IntStream.range(0, numberOfChoices.get())
-              .forEach(
-                      i -> {
-                        host.println("up " + i);
-                        popupBrowser.selectPreviousFile();
-                      });
+          .forEach(
+              i -> {
+                host.println("up " + i);
+                popupBrowser.selectPreviousFile();
+              });
 
       // go to next random choice
       // once again, I did not find a proper way to select a specific item
@@ -80,11 +80,11 @@ public class browserRandomizerExtension extends ControllerExtension {
         nextChoice.set(rand.nextInt(numberOfChoices.get()));
         host.println("nextChoice " + nextChoice.get());
         IntStream.range(0, nextChoice.get())
-                .forEach(
-                        i -> {
-                          host.println("down " + i);
-                          popupBrowser.selectNextFile();
-                        });
+            .forEach(
+                i -> {
+                  host.println("down " + i);
+                  popupBrowser.selectNextFile();
+                });
 
         if (commit) {
           host.scheduleTask(popupBrowser::commit, 300);
