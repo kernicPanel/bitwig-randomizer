@@ -9,10 +9,6 @@ Bitwig browser random selection
 
 This WILL lead to unexpected results, be sure to lower your volume before using.
 
-## SECOND WARNING
-
-I don't know Java, and it's my first Bitwig extension, so I can guarantee that this code is awful.
-
 ## Motivation
 
 I enjoy surprises, and I think that creativity comes from constraints.
