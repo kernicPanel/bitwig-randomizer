@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.kernicpanel</groupId>
-    <artifactId>browserRandomizer</artifactId>
+    <artifactId>randomizer</artifactId>
     <packaging>jar</packaging>
-    <name>browserRandomizer</name>
-    <version>0.2</version>
+    <name>Randomizer</name>
+    <version>1.0</version>
 
     <repositories>
         <repository>
@@ -115,7 +115,7 @@
                         </goals>
                         <configuration>
                             <sourceFile>${project.build.directory}/${project.build.finalName}.jar</sourceFile>
-                            <destinationFile>${user.home}/Bitwig Studio/Extensions/browserRandomizer.bwextension
+                            <destinationFile>${user.home}/Bitwig Studio/Extensions/Randomizer.bwextension
                             </destinationFile>
                         </configuration>
                     </execution>

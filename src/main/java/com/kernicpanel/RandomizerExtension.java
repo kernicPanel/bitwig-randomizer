@@ -11,9 +11,9 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Random;
 
-public class browserRandomizerExtension extends ControllerExtension {
-  protected browserRandomizerExtension(
-      final browserRandomizerExtensionDefinition definition, final ControllerHost host) {
+public class RandomizerExtension extends ControllerExtension {
+  protected RandomizerExtension(
+      final RandomizerExtensionDefinition definition, final ControllerHost host) {
     super(definition, host);
   }
 

@@ -7,14 +7,14 @@ import com.bitwig.extension.controller.AutoDetectionMidiPortNamesList;
 import com.bitwig.extension.controller.ControllerExtensionDefinition;
 import com.bitwig.extension.controller.api.ControllerHost;
 
-public class browserRandomizerExtensionDefinition extends ControllerExtensionDefinition {
+public class RandomizerExtensionDefinition extends ControllerExtensionDefinition {
   private static final UUID DRIVER_ID = UUID.fromString("5c4b743f-cc91-41cf-be42-092ecac4a64b");
 
-  public browserRandomizerExtensionDefinition() {}
+  public RandomizerExtensionDefinition() {}
 
   @Override
   public String getName() {
-    return "browserRandomizer";
+    return "Randomizer";
   }
 
   @Override
@@ -24,7 +24,7 @@ public class browserRandomizerExtensionDefinition extends ControllerExtensionDef
 
   @Override
   public String getVersion() {
-    return "0.2";
+    return "1.0";
   }
 
   @Override
@@ -39,7 +39,7 @@ public class browserRandomizerExtensionDefinition extends ControllerExtensionDef
 
   @Override
   public String getHardwareModel() {
-    return "browserRandomizer";
+    return "Randomizer";
   }
 
   @Override
@@ -62,7 +62,7 @@ public class browserRandomizerExtensionDefinition extends ControllerExtensionDef
       final AutoDetectionMidiPortNamesList list, final PlatformType platformType) {}
 
   @Override
-  public browserRandomizerExtension createInstance(final ControllerHost host) {
-    return new browserRandomizerExtension(this, host);
+  public RandomizerExtension createInstance(final ControllerHost host) {
+    return new RandomizerExtension(this, host);
   }
 }
