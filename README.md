@@ -27,8 +27,7 @@ Copy the released extension to your Bitwig extensions folder.
 Activate it in the settings.
 
 
-https://user-images.githubusercontent.com/720491/177211070-ae224401-6a15-41cb-9f8f-82fb06d2bf6c.mp4
-
+https://user-images.githubusercontent.com/720491/178076494-40867f31-c326-4319-8b38-6d4cedb6aeaa.mp4
 
 
 ## Usage
@@ -38,7 +37,6 @@ https://user-images.githubusercontent.com/720491/177211070-ae224401-6a15-41cb-9f
 This extension allows users to select a random item from the browser.
 It could be any browser related item type, like device, plugin, wave file, preset, modulator…
 
-Currently, it has two buttons:
 - `Select random item` opens a browser if none is already opened and selects a random item from the current opened browser.
 
 - `Add current item` adds the current selected item.
@@ -46,8 +44,13 @@ Currently, it has two buttons:
   For me, it is convenient as it is close to the random button.
 
 
-https://user-images.githubusercontent.com/720491/177211086-69c7c208-c25e-4787-9dcc-3000ff70adce.mp4
+https://user-images.githubusercontent.com/720491/178076578-f902a6bb-7716-4c7d-8d67-cb6ed1db0af2.mp4
+
 
 ### Random name generator
+
+https://user-images.githubusercontent.com/720491/178076594-a29e99ac-e81d-426d-8bca-ff4e8bfc7013.mp4
+
+
 
 
