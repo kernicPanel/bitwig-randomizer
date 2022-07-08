@@ -22,7 +22,7 @@ When used several times, I get a chain
 
 ## Activation
 
-Copy the released extension to you Bitwig extensions folder.
+Copy the released extension to your Bitwig extensions folder.
 
 Activate it in the settings.
 
@@ -36,14 +36,12 @@ https://user-images.githubusercontent.com/720491/177211070-ae224401-6a15-41cb-9f
 This extension allows users to select a random item from the browser.
 It could be any browser related item type, like device, plugin, wave file, preset, modulator…
 
-Currently, it has tree buttons:
+Currently, it has two buttons:
 - `Select random item` opens a browser if none is already opened and selects a random item from the current opened browser.
 
 - `Add current item` adds the current selected item.
   This is the same as `OK` in the browser.
   For me, it is convenient as it is close to the random button.
-
-- `Surprise me!` is the same as the two others chained: opens the browser if none opened, selects a random item and adds it.
 
 
 https://user-images.githubusercontent.com/720491/177211086-69c7c208-c25e-4787-9dcc-3000ff70adce.mp4

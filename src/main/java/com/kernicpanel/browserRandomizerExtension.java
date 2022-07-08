@@ -26,16 +26,12 @@ public class browserRandomizerExtension extends ControllerExtension {
     BrowserResultsItemBank resultsItemBank = popupBrowser.resultsColumn().createItemBank(100000);
 
     documentState
-        .getSignalSetting("Select", "browser", "Select random item")
+        .getSignalSetting("Select", "Randomize browser selection", "Select random item")
         .addSignalObserver(
-            selectRandomItem(host, popupBrowser, cursorTrack, resultsItemBank, rand, false));
+            selectRandomItem(host, popupBrowser, cursorTrack, resultsItemBank, rand));
     documentState
-        .getSignalSetting("Add", "browser", "Add current item")
+        .getSignalSetting("Add", "Randomize browser selection", "Add current item")
         .addSignalObserver(popupBrowser::commit);
-    documentState
-        .getSignalSetting("Random", "browser", "Surprise me!")
-        .addSignalObserver(
-            selectRandomItem(host, popupBrowser, cursorTrack, resultsItemBank, rand, true));
   }
 
   private NoArgsCallback selectRandomItem(
@@ -43,20 +39,18 @@ public class browserRandomizerExtension extends ControllerExtension {
       PopupBrowser popupBrowser,
       CursorTrack cursorTrack,
       BrowserResultsItemBank resultsItemBank,
-      Random rand,
-      Boolean commit) {
+      Random rand) {
     return () -> {
       if (!popupBrowser.exists().getAsBoolean()) {
         cursorTrack.endOfDeviceChainInsertionPoint().browse();
       }
-      resultsItemBank
-          .getItemAt(rand.nextInt(popupBrowser.resultsColumn().entryCount().get()))
-          .isSelected()
-          .set(true);
 
-      if (commit) {
-        host.scheduleTask(popupBrowser::commit, 300);
-      }
+      host.scheduleTask(
+          () -> {
+            Integer random = rand.nextInt(popupBrowser.resultsColumn().entryCount().get());
+            resultsItemBank.getItemAt(random).isSelected().set(true);
+          },
+          300);
     };
   }
 
