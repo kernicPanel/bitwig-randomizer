@@ -18,7 +18,8 @@ This allows me two main things:
 - Select unexpected items, which open up possibilities for me to explore.
 - Force me to use a forgotten device, plugin… etc. to try to master it.
 
-When used several times, I get a chain
+I added a name genarator, wich tries to be inspiring.
+It can be used to name devices, tracks, presets, etc., but also to name projects.
 
 ## Activation
 
@@ -48,6 +49,8 @@ https://user-images.githubusercontent.com/720491/178076578-f902a6bb-7716-4c7d-8d
 
 
 ### Random name generator
+
+An option is available to prepend the generated filename with the current date.
 
 https://user-images.githubusercontent.com/720491/178076594-a29e99ac-e81d-426d-8bca-ff4e8bfc7013.mp4
 
