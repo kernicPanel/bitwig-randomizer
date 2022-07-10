@@ -12,56 +12,59 @@ import java.util.Locale;
 import java.util.Random;
 
 public class RandomizerExtension extends ControllerExtension {
+  Random rand = new Random();
+  Faker faker = new Faker();
+
+  private SettableBooleanValue useDate;
+
+  private ControllerHost host;
+  private DocumentState documentState;
+  private PopupBrowser popupBrowser;
+  private CursorTrack cursorTrack;
+  private BrowserResultsItemBank resultsItemBank;
+
+  private SettableStringValue filenameOutput;
+  private SettableStringValue nameOutput;
+
   protected RandomizerExtension(
       final RandomizerExtensionDefinition definition, final ControllerHost host) {
     super(definition, host);
   }
 
-  private void printer(ControllerHost host, String s) {
+  private void printer(String s) {
     host.println(s);
     java.lang.System.out.println(s);
   }
 
-  Random rand = new Random();
-  Faker faker = new Faker();
 
   @Override
   public void init() {
-    final ControllerHost host = getHost();
+    host = getHost();
 
-    final DocumentState documentState = host.getDocumentState();
-    final PopupBrowser popupBrowser = host.createPopupBrowser();
+    documentState = host.getDocumentState();
+    popupBrowser = host.createPopupBrowser();
     popupBrowser.exists().markInterested();
     popupBrowser.resultsColumn().entryCount().markInterested();
-    final CursorTrack cursorTrack = host.createCursorTrack(0, 0);
+    cursorTrack = host.createCursorTrack(0, 0);
 
-    BrowserResultsItemBank resultsItemBank = popupBrowser.resultsColumn().createItemBank(100000);
+    resultsItemBank = popupBrowser.resultsColumn().createItemBank(100000);
 
-    SettableBooleanValue useDate =
+    useDate =
         host.getPreferences().getBooleanSetting("Prepend date for filename", "Random name", true);
 
     documentState
         .getSignalSetting("Select", "Randomize browser selection", "Select random item")
-        .addSignalObserver(
-            selectRandomItem(host, popupBrowser, cursorTrack, resultsItemBank, rand));
+        .addSignalObserver(selectRandomItem());
     documentState
         .getSignalSetting("Add", "Randomize browser selection", "Add current item")
         .addSignalObserver(popupBrowser::commit);
 
-    SettableStringValue filenameOutput =
-        documentState.getStringSetting("Filename", "Random name", 50, "");
-    SettableStringValue nameOutput = documentState.getStringSetting("Name", "Random name", 50, "");
-    documentState
-        .getSignalSetting(" ", "Random name", "Generate")
-        .addSignalObserver(randomName(useDate, filenameOutput, nameOutput));
+    filenameOutput = documentState.getStringSetting("Filename", "Random name", 50, "");
+    nameOutput = documentState.getStringSetting("Name", "Random name", 50, "");
+    documentState.getSignalSetting(" ", "Random name", "Generate").addSignalObserver(randomName());
   }
 
-  private NoArgsCallback selectRandomItem(
-      ControllerHost host,
-      PopupBrowser popupBrowser,
-      CursorTrack cursorTrack,
-      BrowserResultsItemBank resultsItemBank,
-      Random rand) {
+  private NoArgsCallback selectRandomItem() {
     return () -> {
       if (!popupBrowser.exists().getAsBoolean()) {
         cursorTrack.endOfDeviceChainInsertionPoint().browse();
@@ -76,10 +79,7 @@ public class RandomizerExtension extends ControllerExtension {
     };
   }
 
-  private NoArgsCallback randomName(
-      SettableBooleanValue useDate,
-      SettableStringValue filenameOutput,
-      SettableStringValue nameOutput) {
+  private NoArgsCallback randomName() {
     return () -> {
       String[] moods = {faker.mood().emotion(), faker.mood().tone(), faker.mood().feeling()};
       String mood = moods[rand.nextInt(moods.length)];

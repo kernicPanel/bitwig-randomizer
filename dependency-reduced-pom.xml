@@ -4,7 +4,7 @@
   <groupId>com.kernicpanel</groupId>
   <artifactId>randomizer</artifactId>
   <name>Randomizer</name>
-  <version>1.0</version>
+  <version>1.1</version>
   <build>
     <plugins>
       <plugin>
