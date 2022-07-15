@@ -55,5 +55,7 @@ An option is available to prepend the generated filename with the current date.
 https://user-images.githubusercontent.com/720491/178076594-a29e99ac-e81d-426d-8bca-ff4e8bfc7013.mp4
 
 
-
-
+Another option lets you customize the date format. The default template is
+`yyyy-MM-DD_` which would expand to e.g. `2022-07-31_`. 
+All the possible patterns are docuemnted 
+[here](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns).
