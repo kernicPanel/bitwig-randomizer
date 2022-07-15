@@ -7,6 +7,7 @@ import net.datafaker.Faker;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Random;
@@ -16,6 +17,8 @@ public class RandomizerExtension extends ControllerExtension {
   Faker faker = new Faker();
 
   private SettableBooleanValue useDate;
+  private SettableStringValue dateFormatTemplate;
+  private static final String DEFAULT_DATE_FORMAT_TEMPLATE = "yyyy-MM-dd_";
 
   private ControllerHost host;
   private DocumentState documentState;
@@ -51,6 +54,16 @@ public class RandomizerExtension extends ControllerExtension {
 
     useDate =
         host.getPreferences().getBooleanSetting("Prepend date for filename", "Random name", true);
+    dateFormatTemplate =
+        host.getPreferences().getStringSetting("Format string for date prefix", "Random name", 15, DEFAULT_DATE_FORMAT_TEMPLATE);
+    dateFormatTemplate.addValueObserver(value -> {
+      try {
+        LocalDate.now().format(DateTimeFormatter.ofPattern(value));
+      } catch (IllegalArgumentException | UnsupportedTemporalTypeException e) {
+         dateFormatTemplate.set(DEFAULT_DATE_FORMAT_TEMPLATE);
+         host.showPopupNotification("Invalid date format template.");
+      }
+    });
 
     documentState
         .getSignalSetting("Select", "Randomize browser selection", "Select random item")
@@ -98,9 +111,15 @@ public class RandomizerExtension extends ControllerExtension {
 
       if (useDate.get()) {
         LocalDate dateObj = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String date = dateObj.format(formatter);
-        generatedString = date + "_" + generatedString;
+        String formattedDate;
+        try {
+          formattedDate = dateObj.format(DateTimeFormatter.ofPattern(dateFormatTemplate.get()));
+        } catch (IllegalArgumentException | UnsupportedTemporalTypeException e) {
+          // Should not happen, unless e.g. the config data got corrupted.
+          dateFormatTemplate.set(DEFAULT_DATE_FORMAT_TEMPLATE);
+          formattedDate = dateObj.format(DateTimeFormatter.ofPattern(dateFormatTemplate.get()));
+        }
+        generatedString = formattedDate + generatedString;
       }
 
       filenameOutput.set(generatedString.replace(" ", "_").toLowerCase(Locale.ROOT));
