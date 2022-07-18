@@ -5,6 +5,9 @@
 
 Bitwig randomizer
 
+@polarity did a review for the version 1.0
+https://www.youtube.com/watch?v=KXkJyn4Qsho
+
 ## WARNING
 
 This WILL lead to unexpected results, be sure to lower your volume before using.
