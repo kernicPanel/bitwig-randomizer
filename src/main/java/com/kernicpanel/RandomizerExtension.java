@@ -39,7 +39,6 @@ public class RandomizerExtension extends ControllerExtension {
     java.lang.System.out.println(s);
   }
 
-
   @Override
   public void init() {
     host = getHost();
@@ -55,15 +54,18 @@ public class RandomizerExtension extends ControllerExtension {
     useDate =
         host.getPreferences().getBooleanSetting("Prepend date for filename", "Random name", true);
     dateFormatTemplate =
-        host.getPreferences().getStringSetting("Format string for date prefix", "Random name", 15, DEFAULT_DATE_FORMAT_TEMPLATE);
-    dateFormatTemplate.addValueObserver(value -> {
-      try {
-        LocalDate.now().format(DateTimeFormatter.ofPattern(value));
-      } catch (IllegalArgumentException | UnsupportedTemporalTypeException e) {
-         dateFormatTemplate.set(DEFAULT_DATE_FORMAT_TEMPLATE);
-         host.showPopupNotification("Invalid date format template.");
-      }
-    });
+        host.getPreferences()
+            .getStringSetting(
+                "Format string for date prefix", "Random name", 15, DEFAULT_DATE_FORMAT_TEMPLATE);
+    dateFormatTemplate.addValueObserver(
+        value -> {
+          try {
+            LocalDate.now().format(DateTimeFormatter.ofPattern(value));
+          } catch (IllegalArgumentException | UnsupportedTemporalTypeException e) {
+            dateFormatTemplate.set(DEFAULT_DATE_FORMAT_TEMPLATE);
+            host.showPopupNotification("Invalid date format template.");
+          }
+        });
 
     documentState
         .getSignalSetting("Select", "Randomize browser selection", "Select random item")
