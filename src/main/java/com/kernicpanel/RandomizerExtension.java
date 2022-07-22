@@ -11,6 +11,7 @@ import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class RandomizerExtension extends ControllerExtension {
   Random rand = new Random();
@@ -21,13 +22,19 @@ public class RandomizerExtension extends ControllerExtension {
   private static final String DEFAULT_DATE_FORMAT_TEMPLATE = "yyyy-MM-dd_";
 
   private ControllerHost host;
+  private Application application;
   private DocumentState documentState;
   private PopupBrowser popupBrowser;
   private CursorTrack cursorTrack;
+  private CursorDevice cursorDevice;
+  private CursorRemoteControlsPage remoteControlsPage;
   private BrowserResultsItemBank resultsItemBank;
+  private Preferences preferences;
 
   private SettableStringValue filenameOutput;
   private SettableStringValue nameOutput;
+  private RemoteControl parameter;
+  private SettableRangedValue randomRatio;
 
   protected RandomizerExtension(
       final RandomizerExtensionDefinition definition, final ControllerHost host) {
@@ -42,21 +49,34 @@ public class RandomizerExtension extends ControllerExtension {
   @Override
   public void init() {
     host = getHost();
+    printer("RandomizerExtension initialized");
+    application = host.createApplication();
 
     documentState = host.getDocumentState();
     popupBrowser = host.createPopupBrowser();
+    preferences = host.getPreferences();
     popupBrowser.exists().markInterested();
     popupBrowser.resultsColumn().entryCount().markInterested();
     cursorTrack = host.createCursorTrack(0, 0);
+    preferences = host.getPreferences();
+    cursorDevice = cursorTrack.createCursorDevice();
+    remoteControlsPage = cursorDevice.createCursorRemoteControlsPage(80);
+
+    remoteControlsPage.pageCount().markInterested();
+    remoteControlsPage.pageNames().markInterested();
+    remoteControlsPage.selectedPageIndex().markInterested();
+
+    for (int parameterIndex = 0; parameterIndex < 8; parameterIndex++) {
+      remoteControlsPage.getParameter(parameterIndex).name().markInterested();
+    }
 
     resultsItemBank = popupBrowser.resultsColumn().createItemBank(100000);
 
-    useDate =
-        host.getPreferences().getBooleanSetting("Prepend date for filename", "Random name", true);
+    // Naming settings
+    useDate = preferences.getBooleanSetting("Prefix filename with date", "Random name", true);
     dateFormatTemplate =
-        host.getPreferences()
-            .getStringSetting(
-                "Format string for date prefix", "Random name", 15, DEFAULT_DATE_FORMAT_TEMPLATE);
+        preferences.getStringSetting(
+            "Format string for date prefix", "Random name", 15, DEFAULT_DATE_FORMAT_TEMPLATE);
     dateFormatTemplate.addValueObserver(
         value -> {
           try {
@@ -67,6 +87,12 @@ public class RandomizerExtension extends ControllerExtension {
           }
         });
 
+    // Naming controls
+    filenameOutput = documentState.getStringSetting("Filename", "Random name", 50, "");
+    nameOutput = documentState.getStringSetting("Name", "Random name", 50, "");
+    documentState.getSignalSetting(" ", "Random name", "Generate").addSignalObserver(randomName());
+
+    // Browser selection controls
     documentState
         .getSignalSetting("Select", "Randomize browser selection", "Select random item")
         .addSignalObserver(selectRandomItem());
@@ -74,9 +100,15 @@ public class RandomizerExtension extends ControllerExtension {
         .getSignalSetting("Add", "Randomize browser selection", "Add current item")
         .addSignalObserver(popupBrowser::commit);
 
-    filenameOutput = documentState.getStringSetting("Filename", "Random name", 50, "");
-    nameOutput = documentState.getStringSetting("Name", "Random name", 50, "");
-    documentState.getSignalSetting(" ", "Random name", "Generate").addSignalObserver(randomName());
+    // Parameters controls
+    randomRatio =
+        documentState.getNumberSetting("Ratio", "Randomize Device parameters", 0, 100, 1, "%", 15);
+    documentState
+        .getSignalSetting(" ", "Randomize Device parameters", "Randomize current page")
+        .addSignalObserver(randomizeCurrentPageDeviceParameters());
+    documentState
+        .getSignalSetting("  ", "Randomize Device parameters", "Randomize all parameters")
+        .addSignalObserver(randomizeDeviceParameters());
   }
 
   private NoArgsCallback selectRandomItem() {
@@ -125,6 +157,40 @@ public class RandomizerExtension extends ControllerExtension {
       }
 
       filenameOutput.set(generatedString.replace(" ", "_").toLowerCase(Locale.ROOT));
+    };
+  }
+
+  private NoArgsCallback randomizeCurrentPageDeviceParameters() {
+    return () -> {
+      IntStream.range(0, 8)
+          .forEach(
+              parameterIndex -> {
+                double randomValue = rand.nextDouble();
+                parameter = remoteControlsPage.getParameter(parameterIndex);
+                String parameterName = parameter.name().get();
+
+                if (!parameterName.trim().isEmpty()
+                    && !parameterName.toLowerCase(Locale.ROOT).equals("output")) {
+                  double newValue = ((2 * randomValue) - 1) * randomRatio.get();
+                  parameter.inc(newValue);
+                }
+              });
+    };
+  }
+
+  private NoArgsCallback randomizeDeviceParameters() {
+    return () -> {
+      IntStream.range(0, remoteControlsPage.pageCount().get())
+          .forEachOrdered(
+              (pageIndex) -> {
+                randomizeCurrentPageDeviceParameters().call();
+                try {
+                  remoteControlsPage.selectNextPage(true);
+                  Thread.sleep(10);
+                } catch (InterruptedException e) {
+                  e.printStackTrace();
+                }
+              });
     };
   }
 
