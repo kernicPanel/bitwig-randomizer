@@ -36,6 +36,16 @@ https://user-images.githubusercontent.com/720491/178076494-40867f31-c326-4319-8b
 
 ## Usage
 
+### Parameters randomization
+
+Devices parameters can be randomized.
+A ratio can be applied to limit the range of the new value.
+We can randomize the current parameters page or all of them.
+
+
+https://user-images.githubusercontent.com/720491/180964015-50166694-b680-47f7-b954-8091a33ea6e3.mp4
+
+
 ### Browser random selection
 
 This extension allows users to select a random item from the browser.
