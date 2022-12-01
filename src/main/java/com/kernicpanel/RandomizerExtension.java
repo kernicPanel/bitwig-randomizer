@@ -128,18 +128,83 @@ public class RandomizerExtension extends ControllerExtension {
 
   private NoArgsCallback randomName() {
     return () -> {
-      String[] moods = {faker.mood().emotion(), faker.mood().tone(), faker.mood().feeling()};
-      String mood = moods[rand.nextInt(moods.length)];
+      String[] prefixes = {
+          faker.mood().emotion(),
+          faker.mood().tone(),
+          faker.mood().feeling(),
+          faker.color().name(),
+          faker.coffee().intensifier(),
+          faker.company().buzzword(),
+          faker.dungeonsAndDragons().languages(),
+          faker.size().adjective(),
+          faker.subscription().subscriptionTerms(),
+      };
+//      printer(Arrays.toString(prefixes));
+      String prefix = prefixes[rand.nextInt(prefixes.length)];
 
       String[] names = {
-        faker.superhero().power(),
-        faker.hacker().ingverb(),
-        faker.hacker().noun(),
-        faker.hacker().verb(),
+//          faker.superhero().power(),
+//          faker.superhero().name(),
+          faker.hacker().ingverb(),
+          faker.hacker().noun(),
+          faker.hacker().verb(),
+          faker.food().fruit(),
+          faker.food().ingredient(),
+          faker.food().vegetable(),
+          faker.verb().ingForm(),
+          faker.verb().past(),
+          faker.verb().pastParticiple(),
+          faker.appliance().equipment(),
+          faker.coffee().body(),
+          faker.darkSoul().classes(),
+          faker.darkSoul().stats(),
+          faker.pokemon().type(),
+          faker.dessert().flavor(),
       };
+//      printer(Arrays.toString(names));
       String name = names[rand.nextInt(names.length)];
 
-      String[] generators = {mood, name};
+      String[] suffixes = {
+          faker.animal().name(),
+          faker.weather().description(),
+          faker.address().streetSuffix(),
+          faker.address().citySuffix(),
+          faker.battlefield1().classes(),
+          faker.coffee().descriptor(),
+          faker.company().profession(),
+          faker.construction().heavyEquipment(),
+          faker.construction().materials(),
+          faker.cosmere().shards(),
+          faker.cosmere().surges(),
+          faker.cosmere().knightsRadiant(),
+          faker.cosmere().metals(),
+          faker.cosmere().allomancers(),
+          faker.cosmere().feruchemists(),
+          faker.dessert().variety(),
+          faker.dessert().topping(),
+          faker.dungeonsAndDragons().klasses(),
+          faker.dungeonsAndDragons().meleeWeapons(),
+          faker.dungeonsAndDragons().monsters(),
+          faker.dungeonsAndDragons().races(),
+          faker.dungeonsAndDragons().rangedWeapons(),
+          faker.electricalComponents().active(),
+          faker.electricalComponents().passive(),
+          faker.electricalComponents().electromechanical(),
+          faker.house().furniture(),
+          faker.house().room(),
+          faker.pokemon().move(),
+          faker.restaurant().nameSuffix(),
+          faker.science().element(),
+          faker.science().quark(),
+          faker.science().leptons(),
+          faker.science().bosons(),
+          faker.science().tool(),
+          faker.team().creature(),
+      };
+//      printer(Arrays.toString(suffixes));
+      String suffix = suffixes[rand.nextInt(suffixes.length)];
+
+      String[] generators = {prefix, name, suffix};
       String generatedString = String.join(" ", Arrays.asList(generators));
       nameOutput.set(generatedString.toLowerCase(Locale.ROOT));
 
